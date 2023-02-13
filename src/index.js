@@ -3,6 +3,7 @@ import './css/styles.css';
 import debounce from 'lodash.debounce';
 import Notiflix from 'notiflix';
 import "notiflix/dist/notiflix-3.2.6.min.css";
+import { fetchCountries } from './js/fetch';
 
 const DEBOUNCE_DELAY = 300;
 
@@ -11,7 +12,6 @@ const refs = {
     countriesList: document.querySelector('.country-list'),
     countryInfo: document.querySelector('.country-info'),
     searchBox: document.querySelector('#search-box'),
-    body: document.querySelector('body'),
 }
 
 refs.searchBox.addEventListener('input', debounce(onInputSearch, DEBOUNCE_DELAY));
@@ -103,18 +103,3 @@ function countryCardMarkup(output) {
         refs.countryInfo.innerHTML = cardMarkup;
         return cardMarkup;
 }
-
-const BASE_URL = 'https://restcountries.com/v3.1/name/';
-const searchParams = new URLSearchParams({
-    fields: 'name,capital,population,flags,languages,',
-});
-
-const fetchCountries = (name) => {
-    return fetch(`${BASE_URL}${name}?${searchParams}`)
-        .then(response => {
-            if (response.status === 404) {
-                throw new Error(response.status);
-            }
-            return response.json();
-        });
-};
